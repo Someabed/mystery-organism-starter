@@ -38,7 +38,8 @@ const pAequorFactory = (number, arr) => {
       }
       //console.log(count);
       let percent = Math.round(count / 15 * 100);
-      console.log(`specimen #${this.specimenNum} and specimen #${otherPaequor.specimenNum} have ${percent}% DNA in common`);
+      return percent;
+      /* console.log(`specimen #${this.specimenNum} and specimen #${otherPaequor.specimenNum} have ${percent}% DNA in common`); // commented to return percent*/ 
     },
     // Gets percentage of 'C' & 'G' bases in DNA
     willLikelySurvive(){
@@ -57,6 +58,27 @@ const pAequorFactory = (number, arr) => {
         return false;
       }
     },
+    // Returns complementary DNA strand switching 'A's & 'T's - 'C's & 'G's and viceversa
+    complementStrand(){
+      compStrand = [];
+      this.dna.forEach(element => {
+        switch (element){
+          case 'A':
+            compStrand.push('T');
+            break;
+          case 'T':
+            compStrand.push('A');
+            break;
+          case 'C':
+            compStrand.push('G');;
+            break;
+          case 'G':
+            compStrand.push('C');;
+            break;
+        }
+      });
+      return compStrand;
+    }
   };
 }
 
@@ -69,7 +91,29 @@ for (let i = 1; i < 31; i++){
   pAequorSurviveArray.push(newElement);
 }
 
+// Display the 30 specimen DNA that are likely to survive, and the complemantary strand
 for (let i = 0; i < 30; i++){
-  console.log(`Specimen Number ${pAequorSurviveArray[i].specimenNum}`); //
+  console.log(`Specimen Number ${pAequorSurviveArray[i].specimenNum}`);
   console.log(`Chance of Survival: ${pAequorSurviveArray[i].willLikelySurvive()}`);
+  console.log(`Original Strand is      : ${pAequorSurviveArray[i].dna}`);
+  console.log(`Complementary Strand is : ${pAequorSurviveArray[i].complementStrand()}`);
 }
+
+// To find the 2 most related instances
+let compare = 0;
+let s1 = 0;
+let s2 = 0;
+for (let i = 0; i < 30; i++){
+  for (let j = 1; j < 30; j++){
+    if (i === j){
+      continue;
+    }
+    if (pAequorSurviveArray[i].compareDNA(pAequorSurviveArray[j]) > compare){
+      compare = pAequorSurviveArray[i].compareDNA(pAequorSurviveArray[j]);
+      s1 = i+1;
+      s2 = j+1;
+    }
+  }  
+}
+
+console.log(`The two most related instances of pAequor are Specimen number ${s1} & number ${s2}`);
